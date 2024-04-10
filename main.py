@@ -20,22 +20,20 @@ class Player(GameSprite):
             self.rect.y += self.speed
 
 class Enemy(GameSprite):
-    direction = 'right'
     def update(self):
-        if self.rect.x <= 0:
-            self.direction = "right"
-        if self.rect.x >= 600:
-            self.direction = "left"
+        keys_pressed = key.get_pressed()
+        if keys_pressed[K_UP]:
+            self.rect.y -= self.speed
+        if keys_pressed[K_DOWN]:
+            self.rect.y += self.speed
 
-
-        if self.direction == 'left':
-            self.rect.x -= self.speed
-        if self.direction == 'right':
-            self.rect.x += self.speed 
-
-
-
-
+class Enemy2(GameSprite):
+    def update(self):
+        self.rect.x += self.speed
+        if sprite.collide_rect(sprite2, sprite3):
+            self.speed *= -1
+        if sprite.collide_rect(sprite1, sprite3):
+            self.speed *= -1
 clock = time.Clock()
 window = display.set_mode((700,500))
 display.set_caption('Пинг понг')
@@ -47,14 +45,29 @@ x1= 350
 y1= 250
 x3=300
 y3=350
-sprite1 = Player('Без имени.png', 100, 100, 1)
-sprite2 = Enemy('Без имени2.png', 300, 250 ,3)
-sprite3 = GameSprite('gratis-png-ping-pong-thumbnail.png', 300, 200, 3)
+sprite1 = Player('Без имени.png', 20, 200, 2)
+sprite2 = Enemy('Без имени2.png', 620, 200 ,2)
+sprite3 = Enemy2('gratis-png-ping-pong-thumbnail.png', 300, 200, 3)
 
 
 clock = time.Clock()
 FPS = 120
 
+
+Game = True
+while Game:
+    window.blit(background,(0,0))
+    sprite1.reset()
+    sprite1.update()
+    sprite2.reset()
+    sprite2.update()
+    sprite3.reset()
+    sprite3.update()
+    for e in event.get():
+        if e.type == QUIT:
+            Game = False
+    display.update()
+    clock.tick(FPS)
 
 Game = True
 while game:
