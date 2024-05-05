@@ -1,6 +1,6 @@
 from pygame import *
-score = 0
-lost = 0
+right = 0
+left = 0
 font.init()
 font2 = font.Font(None,36)
 class GameSprite(sprite.Sprite):
@@ -34,7 +34,8 @@ class Enemy(GameSprite):
 
 class Enemy2(GameSprite):
     def update(self):
-        global finish
+        global left
+        global right
         self.rect.x += self.speedX
         self.rect.y += self.speedY
     
@@ -46,15 +47,18 @@ class Enemy2(GameSprite):
 
         if sprite.collide_rect(sprite2, sprite3):
             self.speedX *= -1
+            
+
         if sprite.collide_rect(sprite1, sprite3):
             self.speedX *= -1
         
         if self.rect.x >= 650:
-            finish = True
-            
+            self.rect.x = 350
+            left += 1
+
         if self.rect.x <= 0:
-            finish = True
-            
+            self.rect.x = 350
+            right +=1
 clock = time.Clock()
 window = display.set_mode((700,500))
 display.set_caption('Пинг понг')
@@ -75,6 +79,10 @@ font3 = font.Font(None, 80)
 clock = time.Clock()
 FPS = 120
 
+mixer.init()
+mixer.music.load('004.mp3')
+mixer.music.play()
+
 
 
 Game = True
@@ -93,10 +101,9 @@ while Game:
         text3 = font3.render('Проиграл',1,(255,77,255))
         window.blit(text3,(250,250))
 
-    text1 = font2.render('Счёт:'+ str(score),1,(255,60, 255))
-    text2 = font2.render('Пропущено:'+ str(lost),1,(255,60,255))
-    window.blit(text1,(10,20))
-    window.blit(text2,(10,50))
+    text1 = font2.render(str(left) + ':' + str(right),1,(255,60, 255))
+
+    window.blit(text1,(340,20))
     for e in event.get():
         if e.type == QUIT:
             Game = False
